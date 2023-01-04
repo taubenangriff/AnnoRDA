@@ -45,7 +45,6 @@ namespace AnnoRDA.Loader
         {
             ct.ThrowIfCancellationRequested();
 
-            Stopwatch stopwatch = Stopwatch.StartNew();
             List<Task<FileSystem>> fileSystemTasks = new List<Task<FileSystem>>();
             foreach (string containerPath in Archives)
             {
@@ -58,15 +57,8 @@ namespace AnnoRDA.Loader
                 }));
             }
             var fileSystems = await Task.WhenAll(fileSystemTasks);
-            stopwatch.Stop();
-            Console.WriteLine($"Loading archives took us: {stopwatch.Elapsed.TotalMilliseconds} ms");
 
-            Console.WriteLine("Loading finished! starting merge...");
-
-            stopwatch = Stopwatch.StartNew();
             var result = MergeFileSystems(fileSystems);
-            stopwatch.Stop();
-            Console.WriteLine($"Merging took us: {stopwatch.Elapsed.TotalMilliseconds} ms");
             return result;
         }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Enumeration;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -20,40 +21,63 @@ namespace AnnoRDA.Builder
         public FileSystemBuilder FromPath(string path, string pattern = "*.rda")
         {
             ArchiveFileNames = Directory.GetFiles(path, pattern);
+            Sort();
             return this;
         }
         public FileSystemBuilder AddFile(string filepath)
         {
             ArchiveFileNames.Add(filepath);
+            Sort();
             return this;
         }
 
         public FileSystemBuilder AddFiles(IEnumerable<string> filepaths)
         {
-            foreach(string s in filepaths)
+            foreach (string s in filepaths)
                 ArchiveFileNames.Add(s);
+            Sort();
             return this;
         }
 
 
-        public FileSystemBuilder OnlyFilesLike(string pattern)
+        public FileSystemBuilder OnlyMatchingRegex(string regex)
         {
-            ArchiveFileNames = ArchiveFileNames.Where(f => Regex.IsMatch(f, pattern)).ToList();
+            ArchiveFileNames = ArchiveFileNames.Where(f => Regex.IsMatch(Path.GetFileName(f), regex)).ToList();
+            return this;
+        }
+
+        public FileSystemBuilder OnlyMatchingWildcard(string wildcard)
+        {
+            ArchiveFileNames = ArchiveFileNames.Where(f => FileSystemName.MatchesSimpleExpression(wildcard, Path.GetFileName(f))).ToList();
             return this;
         }
 
         public FileSystemBuilder WithDefaultSorting()
         {
-            SortComparer = new Util.NaturalFilenameStringComparer();
+            SortComparer = new Util.NaturalFilenameStringComparer(); 
+            Sort();
             return this;
+        }
+
+        public FileSystemBuilder WithSorting(IComparer<string> comp)
+        {
+            SortComparer = comp;
+            Sort();
+            return this;
+        }
+
+        private void Sort()
+        {
+            if (SortsItems)
+                ArchiveFileNames = ArchiveFileNames.OrderBy(x => x, SortComparer).ToList();
         }
 
         public FileSystem Build()
         {
-            IEnumerable<string> fileNames = ArchiveFileNames;
-            if (SortsItems)
-                fileNames = fileNames.OrderBy(x => x, SortComparer);
-            FileSystemLoader loader = new FileSystemLoader(fileNames);
+            Sort();
+            if (!ArchiveFileNames.Any())
+                throw new InvalidOperationException("Cannot load an RDA from zero archive files");
+            FileSystemLoader loader = new FileSystemLoader(ArchiveFileNames);
             return loader.Load();
         }
     }

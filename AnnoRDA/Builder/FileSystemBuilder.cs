@@ -40,13 +40,13 @@ namespace AnnoRDA.Builder
         }
 
 
-        public FileSystemBuilder OnlyMatchingRegex(string regex)
+        public FileSystemBuilder OnlyArchivesMatchingRegex(string regex)
         {
             ArchiveFileNames = ArchiveFileNames.Where(f => Regex.IsMatch(Path.GetFileName(f), regex)).ToList();
             return this;
         }
 
-        public FileSystemBuilder OnlyMatchingWildcard(string wildcard)
+        public FileSystemBuilder OnlyArchivesMatchingWildcard(string wildcard)
         {
             ArchiveFileNames = ArchiveFileNames.Where(f => FileSystemName.MatchesSimpleExpression(wildcard, Path.GetFileName(f))).ToList();
             return this;

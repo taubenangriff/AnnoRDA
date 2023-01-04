@@ -5,7 +5,7 @@ using System.IO.Enumeration;
 var builder = FileSystemBuilder.Create()
     .FromPath("F:\\SteamLibrary\\steamapps\\common\\Anno 1800\\maindata")
     .WithDefaultSorting()
-    .OnlyMatchingWildcard(@"data*.rda");
+    .OnlyArchivesMatchingWildcard(@"data*.rda");
 Console.WriteLine(String.Join("\n", builder.ArchiveFileNames));
 Stopwatch stopwatch = Stopwatch.StartNew();
 var filesystem = builder.Build();

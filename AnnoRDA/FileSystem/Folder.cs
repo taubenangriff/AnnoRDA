@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AnnoRDA
 {
+    [DebuggerDisplay("Folder: {Name}")]
     public class Folder : IFileSystemItem
     {
         public string Name { get; set; }
@@ -31,17 +34,16 @@ namespace AnnoRDA
         /// <param name="path">the filepath relative to the folder</param>
         public File GetFile(String path)
         { 
-            var child = Get(path);
+            var child = GetFileSystemItem(path);
             if (child?.ItemType != FileSystemItemType.File)
                 throw new FileNotFoundException(path);
             return (File)child;
         }
-
         /// <exception cref="FileNotFoundException"></exception>
         /// <param name="path">the filepath relative to the folder</param>
         public Folder GetFolder(String path)
         {
-            var child = Get(path);
+            var child = GetFileSystemItem(path);
             if (child?.ItemType != FileSystemItemType.Folder)
                 throw new FileNotFoundException(path);
             return (Folder)child;
@@ -49,15 +51,15 @@ namespace AnnoRDA
 
         /// <exception cref="FileNotFoundException"></exception>
         /// <param name="path">the filepath relative to the folder</param>
-        public IFileSystemItem Get(String path)
+        public IFileSystemItem GetFileSystemItem(String path)
         {
-            var components = new Stack<string>(path.Split("/"));
-            return Get(path, components);
+            var components = new Queue<string>(path.Split("/"));
+            return GetFileSystemItem(path, components)!;
         }
 
-        private IFileSystemItem Get(String fullPath, Stack<String> pathComponents)
+        private IFileSystemItem GetFileSystemItem(String fullPath, Queue<String> pathComponents)
         {
-            var itemname = pathComponents.Pop();
+            var itemname = pathComponents.Dequeue();
 
             if (_childMap.TryGetValue(itemname, out var item))
             {
@@ -66,9 +68,10 @@ namespace AnnoRDA
 
                 //recurse into subfolder
                 if (item.ItemType != FileSystemItemType.Folder)
+
                     throw new FileNotFoundException(fullPath);
                 var folder = (Folder)item;
-                return folder.Get(fullPath, pathComponents);
+                return folder.GetFileSystemItem(fullPath, pathComponents);
             }
             throw new FileNotFoundException(fullPath);
         }
@@ -103,24 +106,26 @@ namespace AnnoRDA
             NewOrReplace,
         }
 
-        public void OverwriteWith(Folder overwriteFolder, IProgress<string>? progress, System.Threading.CancellationToken ct)
+        public void OverwriteWith(Folder overwriteFolder) => OverwriteWith(overwriteFolder, null, CancellationToken.None);
+
+        public void OverwriteWith(Folder overwriteFolder, IProgress<string>? progress, CancellationToken ct)
         {
             if (progress != null)
-            {
                 progress.Report(this.Name);
-            }
 
             foreach (var overwriteSubFolder in overwriteFolder.Folders)
             {
                 ct.ThrowIfCancellationRequested();
 
-                var baseSubFolder = this.Folders.FirstOrDefault((f) => f.Name == overwriteSubFolder.Name);
-                if (baseSubFolder == null)
+                Folder baseSubFolder;
+                if (_childMap.TryGetValue(overwriteSubFolder.Name, out var item))
                 {
+                    baseSubFolder = (Folder)item;
+                }
+                else {
                     baseSubFolder = new Folder(overwriteSubFolder.Name);
                     this.Add(baseSubFolder);
                 }
-
                 baseSubFolder.OverwriteWith(overwriteSubFolder, progress, ct);
             }
 

@@ -13,12 +13,16 @@ namespace AnnoRDA
 
         public void OverwriteWith(FileSystem overwriteFS, IProgress<string> progress, System.Threading.CancellationToken ct)
         {
-            this.Root.OverwriteWith(overwriteFS.Root, progress, ct);
+            Root.OverwriteWith(overwriteFS.Root, progress, ct);
         }
 
-        /// <returns>The <see cref="IFileSystemItem"/> under specified <paramref name="path"/></returns>
+        public void OverwriteWith(FileSystem overwriteFS) =>
+            Root.OverwriteWith(overwriteFS.Root);
+
+
+        /// <returns>The <see cref="IFileSystemItem"/> under specified <paramrefnot set to an instance  name="path"/></returns>
         /// <exception cref="FileNotFoundException"></exception>
-        public IFileSystemItem Get(String path) => Root.Get(path);
+        public IFileSystemItem Get(String path) => Root.GetFileSystemItem(path);
 
         /// <returns>The <see cref="Folder"/> under specified <paramref name="path"/></returns>
         /// <exception cref="FileNotFoundException"></exception>

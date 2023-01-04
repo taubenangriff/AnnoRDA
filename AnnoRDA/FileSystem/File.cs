@@ -10,6 +10,7 @@ namespace AnnoRDA
     public class File : IFileSystemItem
     {
         public string Name { get; set; }
+        public FileSystemItemType ItemType { get; } = FileSystemItemType.File;
 
         public IEnumerable<IFileSystemItem> Children { get { return Enumerable.Empty<IFileSystemItem>(); } }
         public int ChildCount { get { return 0; } }

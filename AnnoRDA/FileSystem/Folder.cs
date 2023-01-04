@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Enumeration;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AnnoRDA
 {
@@ -14,7 +12,7 @@ namespace AnnoRDA
     public class Folder : IFileSystemItem
     {
         public string Name { get; set; }
-        
+
         public FileSystemItemType ItemType { get; } = FileSystemItemType.Folder;
 
         private IDictionary<string, IFileSystemItem> _childMap = new SortedDictionary<string, IFileSystemItem>();
@@ -22,7 +20,7 @@ namespace AnnoRDA
         public IEnumerable<Folder> Folders { get => Children.Where(x => x.ItemType == FileSystemItemType.Folder).Select(x => (Folder)x); }
         public IEnumerable<File> Files { get => Children.Where(x => x.ItemType == FileSystemItemType.File).Select(x => (File)x); }
         public IEnumerable<IFileSystemItem> Children { get => _childMap.Values; }
-        
+
         public int ChildCount { get => _childMap.Count; }
 
         public Folder(string name)
@@ -33,7 +31,7 @@ namespace AnnoRDA
         /// <exception cref="FileNotFoundException"></exception>
         /// <param name="path">the filepath relative to the folder</param>
         public File GetFile(String path)
-        { 
+        {
             var child = GetFileSystemItem(path);
             if (child?.ItemType != FileSystemItemType.File)
                 throw new FileNotFoundException(path);
@@ -74,6 +72,20 @@ namespace AnnoRDA
                 return folder.GetFileSystemItem(fullPath, pathComponents);
             }
             throw new FileNotFoundException(fullPath);
+        }
+        
+        public IEnumerable<File> MatchFiles(String pattern)
+        {
+            var ownResults = Files.Where(x => FileSystemName.MatchesSimpleExpression(pattern, x.Name));
+            var folderResults = Folders.Any() ? 
+                Folders.Select(x => x.MatchFiles(pattern)) 
+                : Enumerable.Empty<IEnumerable<File>>();
+
+            List<File> files = new();
+            files.AddRange(ownResults);
+            foreach (var list in folderResults)
+                files.AddRange(list);
+            return files;
         }
 
         public void Add(IFileSystemItem item, AddMode addMode = AddMode.NewOrReplace)

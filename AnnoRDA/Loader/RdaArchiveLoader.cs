@@ -12,12 +12,12 @@ namespace AnnoRDA.Loader
     /// <summary>
     /// Loads an RDA container file (e.g. data1.rda).
     /// </summary>
-    public class ContainerFileLoader
+    public class RdaArchiveLoader
     {
         public class Context : IDisposable
         {
             public string ContainerFilePath { get; }
-            public ContainerFileLoaderReader Reader { get; }
+            public RdaArchiveReader Reader { get; }
             public IFileHeaderTransformer FileHeaderTransformer { get; }
             public FileSystem FileSystem { get; }
 
@@ -31,7 +31,7 @@ namespace AnnoRDA.Loader
                 }
 
                 this.ContainerFilePath = containerFilePath;
-                this.Reader = new ContainerFileLoaderReader(stream, leaveOpen);
+                this.Reader = new RdaArchiveReader(stream, leaveOpen);
                 this.FileHeaderTransformer = fileHeaderTransformer;
                 this.FileSystem = new FileSystem();
             }
@@ -42,11 +42,11 @@ namespace AnnoRDA.Loader
             }
         }
 
-        private ContainerFileLoaderVerifier verifier;
+        private RdaArchiveVerifier verifier;
 
-        public ContainerFileLoader()
+        public RdaArchiveLoader()
         {
-            this.verifier = new ContainerFileLoaderVerifier();
+            this.verifier = new RdaArchiveVerifier();
         }
 
         public FileSystem Load(string path)

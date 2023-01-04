@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AnnoRDA.Loader
 {
-    public class ContainerFileLoaderReader : IDisposable
+    public class RdaArchiveReader : IDisposable
     {
         public BinaryReader BaseReader { get { return this.reader.BaseReader; } }
         private ContainerFileLoaderStructureReader reader;
@@ -19,7 +19,7 @@ namespace AnnoRDA.Loader
             }
         }
 
-        public ContainerFileLoaderReader(Stream stream, bool leaveOpen)
+        public RdaArchiveReader(Stream stream, bool leaveOpen)
         {
             if (stream == null) {
                 throw new ArgumentNullException("stream");

@@ -1,6 +1,6 @@
 namespace AnnoRDA.Loader
 {
-    public class ContainerFileLoaderVerifier
+    public class RdaArchiveVerifier
     {
         public void VerifyBlockHeader(FileEntities.BlockHeader block)
         {

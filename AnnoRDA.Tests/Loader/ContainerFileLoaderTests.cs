@@ -8,11 +8,11 @@ namespace AnnoRDA.Tests.Loader
 {
     public class ContainerFileLoaderTests
     {
-        private ContainerFileLoader loader = null;
+        private RdaArchiveLoader loader = null;
 
         public ContainerFileLoaderTests()
         {
-            this.loader = new ContainerFileLoader();
+            this.loader = new RdaArchiveLoader();
         }
 
 
@@ -310,7 +310,7 @@ namespace AnnoRDA.Tests.Loader
         public void TestLoadContainerWithInvalidHeader()
         {
             Exception exception = Assert.Throws<AnnoRDA.FileFormatException>(() => {
-                using (var context = new ContainerFileLoader.Context("dummy.rda", TestData.GetStream(new byte[] { }), false, new PassThroughFileHeaderTransformer())) {
+                using (var context = new RdaArchiveLoader.Context("dummy.rda", TestData.GetStream(new byte[] { }), false, new PassThroughFileHeaderTransformer())) {
                     this.loader.Load(context, null, CancellationToken.None);
                 }
             });
@@ -328,7 +328,7 @@ namespace AnnoRDA.Tests.Loader
 
             var stream = TestData.GetStream(new byte[] { 12, 43, 21, 0, 4, 2, 1, 54, 21, 23, 44, 1, 2, 3, 4, 5, 6, 21, 122, 99 });
             exception = Assert.Throws<AnnoRDA.FileFormatException>(() => {
-                using (var context = new ContainerFileLoader.Context("dummy.rda", stream, false, new PassThroughFileHeaderTransformer())) {
+                using (var context = new RdaArchiveLoader.Context("dummy.rda", stream, false, new PassThroughFileHeaderTransformer())) {
                     this.loader.Load(context, null, CancellationToken.None);
                 }
             });

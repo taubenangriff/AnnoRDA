@@ -5,11 +5,11 @@ namespace AnnoRDA.Tests.Loader
 {
     class ContainerFileLoaderVerifierTests
     {
-        ContainerFileLoaderVerifier verifier;
+        RdaArchiveVerifier verifier;
 
         public ContainerFileLoaderVerifierTests()
         {
-            this.verifier = new ContainerFileLoaderVerifier();
+            this.verifier = new RdaArchiveVerifier();
         }
 
         #region Block

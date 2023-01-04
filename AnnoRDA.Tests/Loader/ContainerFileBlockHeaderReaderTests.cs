@@ -19,7 +19,7 @@ namespace AnnoRDA.Tests.Loader
                 0x60, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // uncompressed file headers size
                 0xC7, 0x8A, 0xA9, 0x00, 0x00, 0x00, 0x00, 0x00, // next block offset
             };
-            using (var reader = new ContainerFileLoaderReader(TestData.GetStream(data), false)) {
+            using (var reader = new RdaArchiveReader(TestData.GetStream(data), false)) {
                 actual = reader.ReadBlockHeader(3);
             }
 
@@ -40,7 +40,7 @@ namespace AnnoRDA.Tests.Loader
         {
             var data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x42, 0x00, 0x00, 0x00, 0xB8, 0x22, 0x00, 0x00, 0x00, 0x00 };
             System.Exception exception = Assert.Throws<AnnoRDA.FileFormatException>(() => {
-                using (var reader = new ContainerFileLoaderReader(TestData.GetStream(data), false)) {
+                using (var reader = new RdaArchiveReader(TestData.GetStream(data), false)) {
                     reader.ReadBlockHeader(0);
                 }
             });
@@ -48,7 +48,7 @@ namespace AnnoRDA.Tests.Loader
 
             data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x42, 0x00, 0x00, 0x00, 0xB8, 0x22, 0x00, 0x00, 0x00, 0x00 };
             exception = Assert.Throws<AnnoRDA.FileFormatException>(() => {
-                using (var reader = new ContainerFileLoaderReader(TestData.GetStream(data), false)) {
+                using (var reader = new RdaArchiveReader(TestData.GetStream(data), false)) {
                     reader.ReadBlockHeader(data.Length);
                 }
             });

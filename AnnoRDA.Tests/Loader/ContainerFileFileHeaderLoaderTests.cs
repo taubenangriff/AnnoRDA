@@ -41,9 +41,9 @@ namespace AnnoRDA.Tests.Loader
         [Fact]
         public void TestLoadFileHeaders()
         {
-            var loader = new ContainerFileLoader();
+            var loader = new RdaArchiveLoader();
             AnnoRDA.FileSystem fileSystem;
-            using (var context = new ContainerFileLoader.Context("dummy.rda", TestData.GetStream("FileHeaders/2.2_multiple_file_headers.bin"), false, new PassThroughFileHeaderTransformer())) {
+            using (var context = new RdaArchiveLoader.Context("dummy.rda", TestData.GetStream("FileHeaders/2.2_multiple_file_headers.bin"), false, new PassThroughFileHeaderTransformer())) {
                 var block = new AnnoRDA.FileEntities.BlockHeader() {
                     Offset = context.Reader.StreamLength,
                     IsCompressed = false,
@@ -72,9 +72,9 @@ namespace AnnoRDA.Tests.Loader
         [Fact]
         public void TestLoadCompressedFileHeaders()
         {
-            var loader = new ContainerFileLoader();
+            var loader = new RdaArchiveLoader();
             AnnoRDA.FileSystem fileSystem;
-            using (var context = new ContainerFileLoader.Context("dummy.rda", TestData.GetStream("FileHeaders/2.2_multiple_file_headers_compressed.bin"), false, new PassThroughFileHeaderTransformer())) {
+            using (var context = new RdaArchiveLoader.Context("dummy.rda", TestData.GetStream("FileHeaders/2.2_multiple_file_headers_compressed.bin"), false, new PassThroughFileHeaderTransformer())) {
                 var block = new AnnoRDA.FileEntities.BlockHeader() {
                     Offset = context.Reader.StreamLength,
                     IsCompressed = true,
@@ -103,9 +103,9 @@ namespace AnnoRDA.Tests.Loader
         [Fact]
         public void TestLoadEncryptedFileHeaders()
         {
-            var loader = new ContainerFileLoader();
+            var loader = new RdaArchiveLoader();
             AnnoRDA.FileSystem fileSystem;
-            using (var context = new ContainerFileLoader.Context("dummy.rda", TestData.GetStream("FileHeaders/2.2_multiple_file_headers_encrypted.bin"), false, new PassThroughFileHeaderTransformer())) {
+            using (var context = new RdaArchiveLoader.Context("dummy.rda", TestData.GetStream("FileHeaders/2.2_multiple_file_headers_encrypted.bin"), false, new PassThroughFileHeaderTransformer())) {
                 var block = new AnnoRDA.FileEntities.BlockHeader() {
                     Offset = context.Reader.StreamLength,
                     IsEncrypted = true,
@@ -134,9 +134,9 @@ namespace AnnoRDA.Tests.Loader
         [Fact]
         public void TestLoadCompressedAndEncryptedFileHeaders()
         {
-            var loader = new ContainerFileLoader();
+            var loader = new RdaArchiveLoader();
             AnnoRDA.FileSystem fileSystem;
-            using (var context = new ContainerFileLoader.Context("dummy.rda", TestData.GetStream("FileHeaders/2.2_multiple_file_headers_compressed_encrypted.bin"), false, new PassThroughFileHeaderTransformer())) {
+            using (var context = new RdaArchiveLoader.Context("dummy.rda", TestData.GetStream("FileHeaders/2.2_multiple_file_headers_compressed_encrypted.bin"), false, new PassThroughFileHeaderTransformer())) {
                 var block = new AnnoRDA.FileEntities.BlockHeader() {
                     Offset = context.Reader.StreamLength,
                     IsCompressed = true,
@@ -174,9 +174,9 @@ namespace AnnoRDA.Tests.Loader
                 ModificationTimestamp = 1448398881,
             };
 
-            var loader = new ContainerFileLoader();
+            var loader = new RdaArchiveLoader();
             AnnoRDA.FileSystem fileSystem;
-            using (var context = new ContainerFileLoader.Context("dummy.rda", TestData.GetStream(), false, new PassThroughFileHeaderTransformer())) {
+            using (var context = new RdaArchiveLoader.Context("dummy.rda", TestData.GetStream(), false, new PassThroughFileHeaderTransformer())) {
                 loader.AddFileToFileSystem(context, file, TestData.GetDummyBlockContentsSource());
                 fileSystem = context.FileSystem;
             }
@@ -207,9 +207,9 @@ namespace AnnoRDA.Tests.Loader
                 ModificationTimestamp = 1448398881,
             };
 
-            var loader = new ContainerFileLoader();
+            var loader = new RdaArchiveLoader();
             AnnoRDA.FileSystem fileSystem;
-            using (var context = new ContainerFileLoader.Context("dummy.rda", TestData.GetStream(), false, new PassThroughFileHeaderTransformer())) {
+            using (var context = new RdaArchiveLoader.Context("dummy.rda", TestData.GetStream(), false, new PassThroughFileHeaderTransformer())) {
                 fileSystem = context.FileSystem;
                 fileSystem.Root.Add(folderPath);
                 loader.AddFileToFileSystem(context, file, TestData.GetDummyBlockContentsSource());

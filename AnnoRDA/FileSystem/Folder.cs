@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -26,27 +27,50 @@ namespace AnnoRDA
             this.Name = name;
         }
 
-        public File? GetFile(String name)
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <param name="path">the filepath relative to the folder</param>
+        public File GetFile(String path)
         { 
-            var child = GetChild(name);
+            var child = Get(path);
             if (child?.ItemType != FileSystemItemType.File)
-                return null;
+                throw new FileNotFoundException(path);
             return (File)child;
         }
 
-        public Folder? GetFolder(String name)
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <param name="path">the filepath relative to the folder</param>
+        public Folder GetFolder(String path)
         {
-            var child = GetChild(name);
+            var child = Get(path);
             if (child?.ItemType != FileSystemItemType.Folder)
-                return null;
+                throw new FileNotFoundException(path);
             return (Folder)child;
         }
 
-        public IFileSystemItem? GetChild(String name)
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <param name="path">the filepath relative to the folder</param>
+        public IFileSystemItem Get(String path)
         {
-            if (_childMap.TryGetValue(name, out var fsItem))
-                return fsItem;
-            return null;
+            var components = new Stack<string>(path.Split("/"));
+            return Get(path, components);
+        }
+
+        private IFileSystemItem Get(String fullPath, Stack<String> pathComponents)
+        {
+            var itemname = pathComponents.Pop();
+
+            if (_childMap.TryGetValue(itemname, out var item))
+            {
+                if (pathComponents.Count == 0)
+                    return item;
+
+                //recurse into subfolder
+                if (item.ItemType != FileSystemItemType.Folder)
+                    throw new FileNotFoundException(fullPath);
+                var folder = (Folder)item;
+                return folder.Get(fullPath, pathComponents);
+            }
+            throw new FileNotFoundException(fullPath);
         }
 
         public void Add(IFileSystemItem item, AddMode addMode = AddMode.NewOrReplace)

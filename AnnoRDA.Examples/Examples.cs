@@ -1,11 +1,15 @@
-﻿using AnnoRDA.Loader;
+﻿using AnnoRDA.Builder;
 using System.Diagnostics;
 
-FileSystemLoader loader = new FileSystemLoader("F:\\SteamLibrary\\steamapps\\common\\Anno 1800\\maindata");
-Console.WriteLine(String.Join("\n", loader.Archives));
+var builder = FileSystemBuilder.Create()
+    .FromPath("F:\\SteamLibrary\\steamapps\\common\\Anno 1800\\maindata")
+    .WithDefaultSorting()
+    .OnlyFilesLike("data*[0-9].rda")
+    .AddFile("F:\\SteamLibrary\\steamapps\\common\\Anno 1800\\maindata\\data25.rda");
+Console.WriteLine(String.Join("\n", builder.ArchiveFileNames));
 
 Stopwatch stopwatch = Stopwatch.StartNew();
-var filesystem = loader.Load();
+var filesystem = builder.Build();
 stopwatch.Stop();
 Console.WriteLine($"loaded RDA System in " + stopwatch.Elapsed.TotalMilliseconds + " ms");
 

@@ -17,11 +17,6 @@ namespace AnnoRDA.Loader
 
         public IEnumerable<string> Archives { get; init; }
 
-        public FileSystemLoader(String path)
-        {
-            Archives = SortContainerPaths(Directory.GetFiles(path, "*.rda"));
-        }
-
         public FileSystemLoader(IEnumerable<string> archives)
         { 
              Archives = archives;
@@ -76,19 +71,13 @@ namespace AnnoRDA.Loader
         }
 
         private FileSystem MergeFileSystems(IEnumerable<FileSystem> systems)
-        { 
-            var filesys = new FileSystem();
-            foreach (FileSystem fs in systems)
+        {
+            var filesys = systems.First();
+            foreach (FileSystem fs in systems.Skip(1))
             { 
                 filesys.OverwriteWith(fs);
             }
             return filesys;
-        }
-
-        [Obsolete]
-        public static IEnumerable<string> SortContainerPaths(IEnumerable<string> paths)
-        {
-            return paths.OrderBy((p) => p, new Util.NaturalFilenameStringComparer());
         }
     }
 }

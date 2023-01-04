@@ -20,7 +20,7 @@ namespace AnnoRDA.Util
         }
     }
 
-    internal static class NaturalStringComparer
+    public static class NaturalStringComparer
     {
         // http://stackoverflow.com/a/9745132/467840
         public static int Compare(string a, string b)

@@ -9,7 +9,7 @@ namespace AnnoRDA.Tests.Loader
         [Fact]
         public void TestFileNameSorting()
         {
-            string[] actual = AnnoRDA.Loader.FileSystemLoader.SortContainerPaths(new string[] {
+            string[] actual = (new string[] {
                 "data1.rda",
                 "data10.rda",
                 "data2.rda",
@@ -22,6 +22,7 @@ namespace AnnoRDA.Tests.Loader
                 "data9.rda",
                 "data11.rda",
             }).ToArray();
+            actual = actual.OrderBy(x => x, new AnnoRDA.Util.NaturalFilenameStringComparer()).ToArray();
 
             string[] expected = new string[] {
                 "data1.rda",

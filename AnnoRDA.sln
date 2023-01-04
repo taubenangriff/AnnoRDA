@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnnoRDA.FileDB", "AnnoRDA.F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnnoRDA.Tests", "AnnoRDA.Tests\AnnoRDA.Tests.csproj", "{DE2D22C7-F2EA-4F17-8984-F72687C32E6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnnoRDA.DataArchives", "AnnoRDA.DataArchives\AnnoRDA.DataArchives.csproj", "{58A13459-B5D4-4CF6-B80E-0E2889DA623B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnnoRDA.DataArchives", "AnnoRDA.DataArchives\AnnoRDA.DataArchives.csproj", "{58A13459-B5D4-4CF6-B80E-0E2889DA623B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnnoRDA.Examples", "AnnoRDA.Examples\AnnoRDA.Examples.csproj", "{6FE05A01-36C1-4066-8BF9-6011D38B6F00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{58A13459-B5D4-4CF6-B80E-0E2889DA623B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58A13459-B5D4-4CF6-B80E-0E2889DA623B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58A13459-B5D4-4CF6-B80E-0E2889DA623B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FE05A01-36C1-4066-8BF9-6011D38B6F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FE05A01-36C1-4066-8BF9-6011D38B6F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FE05A01-36C1-4066-8BF9-6011D38B6F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FE05A01-36C1-4066-8BF9-6011D38B6F00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,9 +9,11 @@ namespace AnnoRDA
 {
     public class DataArchive
     {
-        public Stream? OpenRead(String path)
+        FileSystem RdaFileSystem { get; set; }
+
+        public DataArchive()
         {
-            throw new NotImplementedException();
+
         }
     }
 }

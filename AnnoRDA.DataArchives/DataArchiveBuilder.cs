@@ -17,7 +17,7 @@ namespace AnnoRDA.DataArchives
 
         public DataArchive Build()
         {
-            return new DataArchive();
+            throw new NotImplementedException();
         }
     }
 }

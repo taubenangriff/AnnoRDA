@@ -6,7 +6,7 @@ var builder = FileSystemBuilder.Create()
     .FromPath("F:\\SteamLibrary\\steamapps\\common\\Anno 1800\\maindata")
     .WithDefaultSorting()
     .OnlyArchivesMatchingWildcard(@"data*.rda")
-    .AddWhitelisted("*.xml", "*.dds", "*.a7m", "*.a7tinfo");
+    .AddWhitelisted("*.a7tinfo", "*.png", "*.a7minfo", "*.a7t", "*.a7te", "assets.xml", "templates.xml");
 
 Console.WriteLine(String.Join("\n", builder.ArchiveFileNames));
 Stopwatch stopwatch = Stopwatch.StartNew();

@@ -43,8 +43,8 @@ namespace AnnoRDA.Loader
         public bool ShouldLoadFilename(String filename) {
 
             var real_filename = Path.GetFileName(filename);
-            bool whitelisted = WhitelistPatterns.Any(x => FileSystemName.MatchesSimpleExpression(x, real_filename));
-            bool blacklisted = BlacklistPatterns.Any(x => FileSystemName.MatchesSimpleExpression(x, real_filename));
+            bool whitelisted = WhitelistPatterns.Any(x => UseRegexInsteadOfWildcard ? Regex.IsMatch(real_filename, x) : FileSystemName.MatchesSimpleExpression(x, real_filename));
+            bool blacklisted = BlacklistPatterns.Any(x => UseRegexInsteadOfWildcard ? Regex.IsMatch(real_filename, x) : FileSystemName.MatchesSimpleExpression(x, real_filename));
 
             if (UseWhitelist && UseBlacklist && whitelisted && blacklisted)
                 return PreferWhitelist;

@@ -19,6 +19,3 @@ using var filestream = File.Create("templates.xml");
 templates.CopyTo(filestream);
 
 var islands = filesystem.Root.MatchFiles("*.a7tinfo");
-var xmls = filesystem.Root.MatchFiles("*.xml");
-var dds = filesystem.Root.MatchFiles("*.dds");
-int i = 0;

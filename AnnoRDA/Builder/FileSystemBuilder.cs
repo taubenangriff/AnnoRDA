@@ -4,17 +4,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Enumeration;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace AnnoRDA.Builder
 {
     public class FileSystemBuilder
     {
-        private FileSystemBuilder() { }
+        private FileSystemBuilder() {
+            LoaderConfig = RdaArchiveLoaderConfig.Default;
+        }
 
         public IList<string> ArchiveFileNames { get; private set; } = new List<string>();
         public IComparer<string>? SortComparer { get; private set; }
         public bool SortsItems { get => SortComparer is not null; }
+
+        public RdaArchiveLoaderConfig LoaderConfig { get; private set; }
 
         public static FileSystemBuilder Create() { return new FileSystemBuilder(); }
 
@@ -39,7 +45,6 @@ namespace AnnoRDA.Builder
             return this;
         }
 
-
         public FileSystemBuilder OnlyArchivesMatchingRegex(string regex)
         {
             ArchiveFileNames = ArchiveFileNames.Where(f => Regex.IsMatch(Path.GetFileName(f), regex)).ToList();
@@ -54,7 +59,7 @@ namespace AnnoRDA.Builder
 
         public FileSystemBuilder WithDefaultSorting()
         {
-            SortComparer = new Util.NaturalFilenameStringComparer(); 
+            SortComparer = new Util.NaturalFilenameStringComparer();
             Sort();
             return this;
         }
@@ -63,6 +68,41 @@ namespace AnnoRDA.Builder
         {
             SortComparer = comp;
             Sort();
+            return this;
+        }
+
+        public FileSystemBuilder AddWhitelisted(IEnumerable<string> whitelisted)
+        {
+            LoaderConfig.UseWhitelist = true;
+            List<string> newwhitelist = new List<string>(LoaderConfig.WhitelistPatterns);
+            newwhitelist.AddRange(whitelisted);
+            LoaderConfig.WhitelistPatterns = newwhitelist;
+            return this;
+        }
+
+        public FileSystemBuilder AddWhitelisted(params string[] whitelisted) => AddWhitelisted(whitelisted.AsEnumerable());
+
+        public FileSystemBuilder AddBlacklisted(IEnumerable<string> blacklisted)
+        {
+            LoaderConfig.UseBlacklist = true;
+            List<string> newblacklist = new List<string>(LoaderConfig.BlacklistPatterns);
+            newblacklist.AddRange(blacklisted);
+            LoaderConfig.BlacklistPatterns = newblacklist;
+            return this;
+        }
+
+        public FileSystemBuilder AddBlacklisted(params string[] blacklisted) => AddBlacklisted(blacklisted.AsEnumerable());
+
+
+        public FileSystemBuilder PreferBlacklistOverWhitelist()
+        {
+            LoaderConfig.PreferWhitelist = false;
+            return this;
+        }
+
+        public FileSystemBuilder MatchFilenamesUsingRegex()
+        { 
+            LoaderConfig.UseRegexInsteadOfWildcard = true;
             return this;
         }
 
@@ -77,7 +117,7 @@ namespace AnnoRDA.Builder
             Sort();
             if (!ArchiveFileNames.Any())
                 throw new InvalidOperationException("Cannot load an RDA from zero archive files");
-            FileSystemLoader loader = new FileSystemLoader(ArchiveFileNames);
+            FileSystemLoader loader = new FileSystemLoader(ArchiveFileNames, LoaderConfig);
             return loader.Load();
         }
     }

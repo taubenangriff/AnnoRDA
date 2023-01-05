@@ -13,13 +13,17 @@ namespace AnnoRDA.Loader
     /// </summary>
     public class FileSystemLoader
     {
-        private RdaArchiveLoader fileLoader = new RdaArchiveLoader();
-
         public IEnumerable<string> Archives { get; init; }
+        public RdaArchiveLoaderConfig LoaderConfig { get; init; }
 
-        public FileSystemLoader(IEnumerable<string> archives)
-        { 
-             Archives = archives;
+        public FileSystemLoader(IEnumerable<string> archives) : this(archives, RdaArchiveLoaderConfig.Default)
+        {
+            Archives = archives;
+        }
+        public FileSystemLoader(IEnumerable<string> archives, RdaArchiveLoaderConfig loaderConfig)
+        {
+            LoaderConfig = loaderConfig;
+            Archives = archives;
         }
 
         public FileSystem Load()
@@ -32,10 +36,11 @@ namespace AnnoRDA.Loader
             ct.ThrowIfCancellationRequested();
 
             FileSystem fileSystem = new FileSystem();
+            var rdaarchiveloader = new RdaArchiveLoader(LoaderConfig);
             foreach (string containerPath in Archives) {
                 ct.ThrowIfCancellationRequested();
 
-                FileSystem containerFileSystem = this.fileLoader.Load(containerPath, null, ct);
+                FileSystem containerFileSystem = rdaarchiveloader.Load(containerPath, null, ct);
                 fileSystem.OverwriteWith(containerFileSystem, null, ct);
             }
             return fileSystem;
@@ -50,7 +55,7 @@ namespace AnnoRDA.Loader
             {
                 fileSystemTasks.Add(Task.Run(() =>
                 {
-                    var rdaarchiveloader = new RdaArchiveLoader();
+                    var rdaarchiveloader = new RdaArchiveLoader(LoaderConfig);
                     ct.ThrowIfCancellationRequested();
                     var containerFileSystem = rdaarchiveloader.Load(containerPath, null, ct);
                     return containerFileSystem;

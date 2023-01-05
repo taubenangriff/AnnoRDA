@@ -43,9 +43,14 @@ namespace AnnoRDA.Loader
         }
 
         private RdaArchiveVerifier verifier;
+        private RdaArchiveLoaderConfig loaderConfig; 
 
-        public RdaArchiveLoader()
+        public RdaArchiveLoader() : this(RdaArchiveLoaderConfig.Default)
+        { }
+
+        public RdaArchiveLoader(RdaArchiveLoaderConfig config)
         {
+            this.loaderConfig = config;
             this.verifier = new RdaArchiveVerifier();
         }
 
@@ -114,8 +119,11 @@ namespace AnnoRDA.Loader
 
         #region Add to FileSystem
 
-        public AnnoRDA.File AddFileToFileSystem(Context context, FileHeader fileHeader, AnnoRDA.BlockContentsSource blockContentsSource)
+        public AnnoRDA.File? AddFileToFileSystem(Context context, FileHeader fileHeader, AnnoRDA.BlockContentsSource blockContentsSource)
         {
+            if (!loaderConfig.ShouldLoadFilename(fileHeader.Path))
+                return null;
+
             string[] filePathComponents = fileHeader.Path.Split('/');
             AnnoRDA.File file = this.AddFileToFolder(context.FileSystem.Root, fileHeader, filePathComponents, blockContentsSource);
 
@@ -123,7 +131,8 @@ namespace AnnoRDA.Loader
 
             return file;
         }
-        public AnnoRDA.File AddFileToFolder(AnnoRDA.Folder folder, FileHeader file, IEnumerable<string> filePathComponents, AnnoRDA.BlockContentsSource blockContentsSource)
+
+        private AnnoRDA.File AddFileToFolder(AnnoRDA.Folder folder, FileHeader file, IEnumerable<string> filePathComponents, AnnoRDA.BlockContentsSource blockContentsSource)
         {
             if (!filePathComponents.Any()) {
                 throw new ArgumentException("filePathComponents cannot be empty", "filePathComponents");

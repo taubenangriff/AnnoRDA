@@ -18,5 +18,5 @@ using var templates = filesystem.OpenRead("data/config/export/main/asset/templat
 using var filestream = File.Create("templates.xml");
 templates.CopyTo(filestream);
 
-var islands = filesystem.Root.EnumerateFiles("data/dlc06/sessions/maps/land_of_lions/*.a7tinfo");
+var islands = filesystem.Root.FindFiles("data/dlc06/sessions/maps/land_of_lions/*.a7tinfo");
 int i = 0; 

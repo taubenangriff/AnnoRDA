@@ -41,6 +41,6 @@ namespace AnnoRDA
             return file.ContentsSource.GetReadStream();
         }
 
-        public IEnumerable<string> EnumerateFiles(String pattern) => Root.EnumerateFiles(pattern);
+        public IEnumerable<string> FindFiles(String pattern) => Root.FindFiles(pattern);
     }
 }

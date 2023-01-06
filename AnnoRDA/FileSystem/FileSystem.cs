@@ -40,5 +40,7 @@ namespace AnnoRDA
             var file = GetFile(path);
             return file.ContentsSource.GetReadStream();
         }
+
+        public IEnumerable<string> EnumerateFiles(String pattern) => Root.EnumerateFiles(pattern);
     }
 }

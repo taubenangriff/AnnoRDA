@@ -74,14 +74,16 @@ namespace AnnoRDA
             throw new FileNotFoundException(fullPath);
         }
         
-        public IEnumerable<File> MatchFiles(String pattern)
-        {
-            var ownResults = Files.Where(x => FileSystemName.MatchesSimpleExpression(pattern, x.Name));
-            var folderResults = Folders.Any() ? 
-                Folders.Select(x => x.MatchFiles(pattern)) 
-                : Enumerable.Empty<IEnumerable<File>>();
+        public IEnumerable<String> EnumerateFiles(String pattern) => EnumerateFiles(pattern, "");
 
-            List<File> files = new();
+        private IEnumerable<String> EnumerateFiles(String pattern, String pathSoFar)
+        {
+            var ownResults = Files.Where(x => FileSystemName.MatchesSimpleExpression(pattern, pathSoFar + x.Name)).Select(x => pathSoFar + x.Name);
+            var folderResults = Folders.Any() ?
+                Folders.Select(x => x.EnumerateFiles(pattern, pathSoFar+Name + (Name.Equals("") ? "" : "/" )))
+                : Enumerable.Empty<IEnumerable<String>>();
+
+            List<string> files = new();
             files.AddRange(ownResults);
             foreach (var list in folderResults)
                 files.AddRange(list);

@@ -32,7 +32,7 @@ namespace AnnoRDA
         /// <exception cref="FileNotFoundException"></exception>
         public File GetFile(String path) => Root.GetFile(path);
 
-   
+
         /// <returns>A readonly stream on the file content</returns>
         /// <exception cref="FileNotFoundException"></exception>
         public Stream OpenRead(String path)
@@ -42,5 +42,11 @@ namespace AnnoRDA
         }
 
         public IEnumerable<string> FindFiles(String pattern) => Root.FindFiles(pattern);
+
+        public IEnumerable<string> EnumerateFiles(String folder_path)
+        {
+            var folder = GetFolder(folder_path);
+            return folder.Files.Select(x => folder_path + "/" + x.Name);
+        }
     }
 }

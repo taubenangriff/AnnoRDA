@@ -78,9 +78,11 @@ namespace AnnoRDA
 
         private IEnumerable<String> FindFiles(String pattern, String pathSoFar)
         {
-            var ownResults = Files.Where(x => FileSystemName.MatchesSimpleExpression(pattern, pathSoFar + x.Name)).Select(x => pathSoFar + x.Name);
+            //don't add a / at root level
+            var newPath = pathSoFar + Name + (Name.Equals("") ? "" : "/");
+            var ownResults = Files.Where(x => FileSystemName.MatchesSimpleExpression(pattern, newPath + x.Name)).Select(x => newPath + x.Name);
             var folderResults = Folders.Any() ?
-                Folders.Select(x => x.FindFiles(pattern, pathSoFar+Name + (Name.Equals("") ? "" : "/" )))
+                Folders.Select(x => x.FindFiles(pattern, newPath))
                 : Enumerable.Empty<IEnumerable<String>>();
 
             List<string> files = new();

@@ -123,6 +123,8 @@ namespace AnnoRDA.Loader
         {
             if (!loaderConfig.ShouldLoadFilename(fileHeader.Path))
                 return null;
+            if (!loaderConfig.LoadZeroByteFiles && fileHeader.UncompressedFileSize == 0)
+                return null;
 
             string[] filePathComponents = fileHeader.Path.Split('/');
             AnnoRDA.File file = this.AddFileToFolder(context.FileSystem.Root, fileHeader, filePathComponents, blockContentsSource);

@@ -106,6 +106,12 @@ namespace AnnoRDA.Builder
             return this;
         }
 
+        public FileSystemBuilder ConfigureLoadZeroByteFiles(bool loadThem)
+        {
+            LoaderConfig.LoadZeroByteFiles = loadThem;
+            return this;
+        }
+
         private void Sort()
         {
             if (SortsItems)

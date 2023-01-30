@@ -19,6 +19,8 @@ namespace AnnoRDA.Loader
 
         public bool UseRegexInsteadOfWildcard { get; set; } = false;
 
+        public bool LoadZeroByteFiles { get; set; } = true;
+
         public RdaArchiveLoaderConfig(
             IEnumerable<string> whitelistPatterns,
             bool useWhitelist,

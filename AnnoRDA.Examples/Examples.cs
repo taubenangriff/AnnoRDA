@@ -14,9 +14,10 @@ var filesystem = builder.Build();
 stopwatch.Stop();
 Console.WriteLine($"loaded RDA System in " + stopwatch.Elapsed.TotalMilliseconds + " ms");
 
-using var templates = filesystem.OpenRead("data/config/export/main/asset/templates.xml");
-using var filestream = File.Create("templates.xml");
-templates.CopyTo(filestream);
+#region NewFileApi
 
-var islands = filesystem.Root.FindFiles("data/dlc06/sessions/maps/land_of_lions/*.a7tinfo");
-int i = 0; 
+filesystem.File.OpenRead("data/config/export/main/asset/templates.xml");
+var specialistImgs = filesystem.Directory.EnumerateFiles("data/ui/2kimages/3dicons/specialist");
+var properties = filesystem.File.ReadAllText("data/config/export/main/asset/properties.xml");
+
+#endregion

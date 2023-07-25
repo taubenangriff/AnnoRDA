@@ -9,7 +9,15 @@ namespace AnnoRDA
 {
     public class FileSystem
     {
-        public Folder Root { get; set; } = new Folder("");
+        public DirectoryAccess Directory { get; }
+        public FileAccess File { get; }
+
+        private Folder Root { get; set; } = new Folder("");
+
+        public FileSystem() {
+            Directory = new DirectoryAccess(this);
+            File = new FileAccess(this);    
+        }
 
         public void OverwriteWith(FileSystem overwriteFS, IProgress<string> progress, System.Threading.CancellationToken ct)
         {

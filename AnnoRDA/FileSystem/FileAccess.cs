@@ -31,11 +31,27 @@ namespace AnnoRDA
 
         #region Opening
 
-        public Stream Open(String path, FileMode mode) => throw new NotImplementedException();
+        public Stream Open(String path, FileMode mode = FileMode.Open, System.IO.FileAccess access = System.IO.FileAccess.Read)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+                throw new ArgumentNullException(nameof(path));
 
-        public Stream OpenRead(String path) => throw new NotImplementedException();
+            //TODO Make sure this accepts '|' in the Path! 
+            if (path.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+                throw new NotSupportedException(nameof(path));
 
-        public StreamReader OpenText(string path) => throw new NotImplementedException();
+            if (mode != FileMode.Open)
+                throw new NotSupportedException("FileModes other than Open will be supported in future releases");
+            if (access != System.IO.FileAccess.Read)
+                throw new NotSupportedException("FileAccess other than Read will be supported in future releases");
+
+            var file = _fileSystem.Root.GetFile(path);
+            return file.ContentsSource.GetReadStream();
+        }
+
+        public Stream OpenRead(String path) => Open(path, FileMode.Open, System.IO.FileAccess.Read);
+
+        public StreamReader OpenText(string path) => new StreamReader(OpenRead(path));
 
         #endregion
 

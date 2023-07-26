@@ -12,7 +12,7 @@ namespace AnnoRDA
         public DirectoryAccess Directory { get; }
         public FileAccess File { get; }
 
-        private Folder Root { get; set; } = new Folder("");
+        internal Folder Root { get; set; } = new Folder("");
 
         public FileSystem() {
             Directory = new DirectoryAccess(this);
@@ -40,14 +40,9 @@ namespace AnnoRDA
         /// <exception cref="FileNotFoundException"></exception>
         public File GetFile(String path) => Root.GetFile(path);
 
-
         /// <returns>A readonly stream on the file content</returns>
         /// <exception cref="FileNotFoundException"></exception>
-        public Stream OpenRead(String path)
-        {
-            var file = GetFile(path);
-            return file.ContentsSource.GetReadStream();
-        }
+        public Stream OpenRead(String path) => File.OpenRead(path);
 
         public IEnumerable<string> FindFiles(String pattern) => Root.FindFiles(pattern);
 
